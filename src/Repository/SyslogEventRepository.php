@@ -19,6 +19,25 @@ class SyslogEventRepository extends ServiceEntityRepository
         parent::__construct($registry, SyslogEvent::class);
     }
 
+    public function getAllUniqueHosts()
+    {
+        return $this->createQueryBuilder('s')
+            ->select('s.FromHost')
+            ->groupBy('s.FromHost')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findMostRecentEventsByHost(string $hostname, int $days = 7)
+    {
+        return $this->findBy(
+            [
+                'FromHost' => $hostname,
+            ]
+        );
+    }
+
     // /**
     //  * @return SyslogEvent[] Returns an array of SyslogEvent objects
     //  */

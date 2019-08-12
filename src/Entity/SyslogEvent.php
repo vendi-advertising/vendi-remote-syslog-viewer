@@ -47,7 +47,7 @@ class SyslogEvent
      *
      * @ORM\Column(name="Facility", type="smallint", precision=0, scale=0, nullable=true, options={"default"="NULL"}, unique=false)
      */
-    private $facility = 'NULL';
+    private $Facility = 'NULL';
 
     /**
      * @var int|null
