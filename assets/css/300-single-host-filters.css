@@ -1,0 +1,10 @@
+.filters {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s linear;
+    /* transition-delay: 0; */
+}
+
+.filters.visible {
+    max-height: 25rem;
+}

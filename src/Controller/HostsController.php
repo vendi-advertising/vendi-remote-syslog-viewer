@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Constants\SyslogFacilities;
 use App\Constants\SyslogPriorities;
 use App\Repository\SyslogEventRepository;
+use App\Service\MessageFilterService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,10 +14,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class HostsController extends AbstractController
 {
     private $syslogEventRepository;
+    private $messageFilterService;
 
-    public function __construct(SyslogEventRepository $syslogEventRepository)
+    public function __construct(SyslogEventRepository $syslogEventRepository, MessageFilterService $messageFilterService)
     {
         $this->syslogEventRepository = $syslogEventRepository;
+        $this->messageFilterService = $messageFilterService;
     }
 
     /**
@@ -60,8 +63,12 @@ class HostsController extends AbstractController
 
         $criteria['Priority'] = $priorities;
 
+        $events = $this->syslogEventRepository->findBy($criteria);
+
+        $this->messageFilterService->apply_filters($events);
+
         return $this->render('hosts/single_host_info.html.twig', [
-            'events' => $this->syslogEventRepository->findBy($criteria),
+            'events' => $events,
             'all_facilities' => SyslogFacilities::get_all(),
             'all_priorities' => SyslogPriorities::get_all(),
             'selected_facilities' => array_values($facilities),

@@ -182,6 +182,23 @@ class SyslogEvent
      */
     private $SystemID;
 
+    private $filtered_message;
+
+    public function set_filtered_message(string $message)
+    {
+        $this->filtered_message = $message;
+    }
+
+    public function get_filtered_message() : ?string
+    {
+        return $this->filtered_message;
+    }
+
+    public function get_best_message() : string
+    {
+        return $this->get_filtered_message() ?? $this->getMessage();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
