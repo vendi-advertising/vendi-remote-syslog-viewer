@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * SystemEvent
  *
- * @ORM\Table(name="systemevents")
+ * @ORM\Table(name="SystemEvents")
  * @ORM\Entity(repositoryClass="App\Repository\SyslogEventRepository")
  */
 class SyslogEvent
