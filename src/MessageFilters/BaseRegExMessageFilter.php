@@ -2,38 +2,41 @@
 
 namespace App\MessageFilters;
 
+use App\Entity\SyslogEvent;
 use App\Exceptions\GeneralVendiRemoteSyslogException;
 
-abstract class BaseRegExMessageFilter implements MessageFilterInterface
+abstract class BaseRegExMessageFilter extends BaseMessageFilter
 {
     private $pattern;
+
+    abstract public function apply_regex_callback(array $matches) : string;
 
     public function __construct(string $pattern)
     {
         $this->pattern = $pattern;
     }
 
-    public function process_message(string $message) : string
+    public function process_message(SyslogEvent $event) : string
     {
         return \preg_replace_callback(
             $this->pattern,
             [$this, 'apply_regex_callback'],
-            $message
+            $this->get_clean_message_string($event)
         );
     }
 
-    abstract public function apply_regex_callback(array $matches) : string;
-
-    public function is_match(string $message) : bool
+    public function is_match(SyslogEvent $event) : bool
     {
-        $ret = \preg_match($this->pattern, $message);
+        $ret = \preg_match($this->pattern, $this->get_clean_message_string($event));
         if(false === $ret){
             throw new GeneralVendiRemoteSyslogException(sprintf( 'Invalid regex: %1$s', $this->pattern));
         }
 
         return $ret ? true : false;
+    }
 
-        //^\[\s*[\d\.]+\] \[UFW BLOCK\] IN=eth\d OUT= MAC=([a-f0-9:]{41}) SRC=([\d\.]+) DST=([\d\.]+).*?$
+    public function get_pattern() : string
+    {
+        return $this->pattern;
     }
 }
-//

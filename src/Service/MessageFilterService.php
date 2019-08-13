@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\MessageFilters\FirewallBlockFilter;
+use App\MessageFilters\MySqlNote;
 
 class MessageFilterService
 {
@@ -12,6 +13,7 @@ class MessageFilterService
         if(!$filters){
             $filters = [
                 new FirewallBlockFilter(),
+                new MySqlNote(),
             ];
         }
 
@@ -23,11 +25,12 @@ class MessageFilterService
         $filters = $this->get_filters();
         foreach($events as $event){
             foreach($filters as $filter) {
-                if(!$filter->is_match($event->getMessage())) {
+
+                if(!$filter->is_match($event)) {
                     continue;
                 }
 
-                $event->set_filtered_message($filter->process_message($event->getMessage()));
+                $event->set_filtered_message($filter->process_message($event));
                 break;
             }
         }

@@ -21,6 +21,10 @@
 
 <div class="filters">
     <form method="get">
+
+        <input type="hidden" name="options[]" value="" />
+
+
         <fieldset>
             <legend>Facilities</legend>
             {% for id, facility in all_facilities %}
@@ -41,6 +45,18 @@
                 {% endif %}
                  /> {{priority.name}}</label>
             {% endfor %}
+        </fieldset>
+
+        <fieldset>
+            <legend>Options</legend>
+            <label>
+                <input type="checkbox" name="options[]" value="filter_messages"
+                {% if 'filter_messages' in selected_options %}
+                    checked
+                {% endif %}
+                />
+                Filter messages
+            </label>
         </fieldset>
 
         <input type="submit" value="Submit" />

@@ -2,9 +2,13 @@
 
 namespace App\MessageFilters;
 
+use App\Entity\SyslogEvent;
+
 interface MessageFilterInterface
 {
-    public function process_message(string $message) : string;
+    public function process_message(SyslogEvent $event) : string;
 
-    public function is_match(string $message) : bool;
+    public function is_match(SyslogEvent $event) : bool;
+
+    public function get_clean_message_string(SyslogEvent $event) : string;
 }

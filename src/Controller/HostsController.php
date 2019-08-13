@@ -49,7 +49,7 @@ class HostsController extends AbstractController
 
         $facilities = $request->query->get('facility');
         if($facilities){
-            $criteria['Facility'] = array_values($facilities);
+            $facilities = array_values($facilities);
         }else{
             $facilities = [];
         }
@@ -61,11 +61,25 @@ class HostsController extends AbstractController
             $priorities = [0, 1, 2, 3, 4];
         }
 
-        $criteria['Priority'] = $priorities;
+        $selected_options = $request->query->get('options');
+        if($selected_options){
+            $selected_options = array_values($selected_options);
+        }else{
+            $selected_options = ['filter_messages'];
+        }
+
+        if(count($facilities)){
+            $criteria['Facility'] = $facilities;
+        }
+        if(count($priorities)){
+            $criteria['Priority'] = $priorities;
+        }
 
         $events = $this->syslogEventRepository->findBy($criteria);
 
-        $this->messageFilterService->apply_filters($events);
+        if(in_array('filter_messages', $selected_options)){
+            $this->messageFilterService->apply_filters($events);
+        }
 
         return $this->render('hosts/single_host_info.html.twig', [
             'events' => $events,
@@ -73,6 +87,7 @@ class HostsController extends AbstractController
             'all_priorities' => SyslogPriorities::get_all(),
             'selected_facilities' => array_values($facilities),
             'selected_priorities' => array_values($priorities),
+            'selected_options' => $selected_options,
         ]);
     }
 }
