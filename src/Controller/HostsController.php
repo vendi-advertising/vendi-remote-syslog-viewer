@@ -29,7 +29,7 @@ class HostsController extends AbstractController
     {
         $hosts = $this
             ->syslogEventRepository
-            ->getAllUniqueHosts()
+            ->getAllUniqueHostsHashed()
         ;
 
         return $this->render('hosts/index.html.twig', [
@@ -42,6 +42,22 @@ class HostsController extends AbstractController
      */
     public function host_details(string $hostname, Request $request)
     {
+
+        $hosts = $this
+            ->syslogEventRepository
+            ->getAllUniqueHostsHashed()
+        ;
+
+        $host_hash = $request->query->get('host');
+        if(!$host_hash){
+            throw new \Exception('No host hash');
+        }
+
+        if(!array_key_exists($host_hash, $hosts)){
+            throw new \Exception('Host hash doesn\'t match known hosts');
+        }
+
+        $hostname = $hosts[$host_hash];
 
         $criteria = [
             'FromHost' => $hostname,
@@ -83,11 +99,13 @@ class HostsController extends AbstractController
 
         return $this->render('hosts/single_host_info.html.twig', [
             'events' => $events,
+            'hosts' => $hosts,
             'all_facilities' => SyslogFacilities::get_all(),
             'all_priorities' => SyslogPriorities::get_all(),
             'selected_facilities' => array_values($facilities),
             'selected_priorities' => array_values($priorities),
             'selected_options' => $selected_options,
+            'host_hash' => $host_hash,
         ]);
     }
 }

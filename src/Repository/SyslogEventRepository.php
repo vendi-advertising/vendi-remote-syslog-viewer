@@ -19,14 +19,30 @@ class SyslogEventRepository extends ServiceEntityRepository
         parent::__construct($registry, SyslogEvent::class);
     }
 
-    public function getAllUniqueHosts()
+    public function getAllUniqueHostsHashed(bool $refresh_cache = false) : array
     {
-        return $this->createQueryBuilder('s')
-            ->select('s.FromHost')
-            ->groupBy('s.FromHost')
-            ->getQuery()
-            ->getResult()
-        ;
+        $hosts = $this->getAllUniqueHosts($refresh_cache);
+        $ret = [];
+        foreach($hosts as $host){
+            $ret[ hash('sha1', $host['FromHost'] ) ] = $host['FromHost'];
+        }
+
+        return $ret;
+    }
+
+    public function getAllUniqueHosts(bool $refresh_cache = false)
+    {
+        static $hosts;
+        if($refresh_cache || !$hosts){
+            $hosts = $this->createQueryBuilder('s')
+                ->select('s.FromHost')
+                ->groupBy('s.FromHost')
+                ->getQuery()
+                ->getResult()
+            ;
+        }
+
+        return $hosts;
     }
 
     public function findMostRecentEventsByHost(string $hostname, int $days = 7)

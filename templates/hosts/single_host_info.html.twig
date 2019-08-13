@@ -59,6 +59,17 @@
             </label>
         </fieldset>
 
+        <fieldset>
+            <legend>Hosts</legend>
+            {% for hash, host in hosts %}
+                <label><input type="radio" name="host" value="{{ hash }}"
+                {% if hash == host_hash %}
+                    checked
+                {% endif %}
+                /> {{host}}</label>
+            {% endfor %}
+        </fieldset>
+
         <input type="submit" value="Submit" />
     </form>
 </div>
