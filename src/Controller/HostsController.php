@@ -6,6 +6,7 @@ use App\Constants\SyslogFacilities;
 use App\Constants\SyslogPriorities;
 use App\Repository\SyslogEventRepository;
 use App\Service\MessageFilterService;
+use App\Service\MessageReducerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,11 +16,13 @@ class HostsController extends AbstractController
 {
     private $syslogEventRepository;
     private $messageFilterService;
+    private $messageReducerService;
 
-    public function __construct(SyslogEventRepository $syslogEventRepository, MessageFilterService $messageFilterService)
+    public function __construct(SyslogEventRepository $syslogEventRepository, MessageFilterService $messageFilterService, MessageReducerService $messageReducerService)
     {
         $this->syslogEventRepository = $syslogEventRepository;
         $this->messageFilterService = $messageFilterService;
+        $this->messageReducerService = $messageReducerService;
     }
 
     /**
@@ -94,7 +97,9 @@ class HostsController extends AbstractController
         $events = $this->syslogEventRepository->findBy($criteria, null, 5000);
 
         if(in_array('filter_messages', $selected_options)){
+            $events = $this->messageReducerService->apply_reducers($events);
             $this->messageFilterService->apply_filters($events);
+            $events = $this->messageReducerService->apply_reducers($events);
         }
 
         return $this->render('hosts/single_host_info.html.twig', [

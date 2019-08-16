@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\MessageFilters\FirewallBlockFilter;
+use App\MessageFilters\GeneralBootMessages;
 use App\MessageFilters\MySqlNote;
 
 class MessageFilterService
@@ -14,6 +15,7 @@ class MessageFilterService
             $filters = [
                 new FirewallBlockFilter(),
                 new MySqlNote(),
+                new GeneralBootMessages(),
             ];
         }
 
