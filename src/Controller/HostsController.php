@@ -121,7 +121,7 @@ class HostsController extends AbstractController
             $criteria['Priority'] = $priorities;
         }
 
-        $events = $this->syslogEventRepository->findBy($criteria, null, $limit);
+        $events = $this->syslogEventRepository->findBy($criteria, ['ReceivedAt' => 'DESC'], $limit);
 
         if(in_array('filter_messages', $selected_options)){
             $events = $this->messageReducerService->apply_reducers($events);
