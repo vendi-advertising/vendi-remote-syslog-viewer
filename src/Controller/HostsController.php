@@ -76,6 +76,13 @@ class HostsController extends AbstractController
             throw new \Exception('No host hash');
         }
 
+        $limit = $request->query->get('limit');
+        if(!$limit){
+            $limit = 200;
+        } else {
+            $limit = (int) $limit;
+        }
+
         if(!array_key_exists($host_hash, $hosts)){
             throw new \Exception('Host hash doesn\'t match known hosts');
         }
@@ -114,7 +121,7 @@ class HostsController extends AbstractController
             $criteria['Priority'] = $priorities;
         }
 
-        $events = $this->syslogEventRepository->findBy($criteria, null, 5000);
+        $events = $this->syslogEventRepository->findBy($criteria, null, $limit);
 
         if(in_array('filter_messages', $selected_options)){
             $events = $this->messageReducerService->apply_reducers($events);
