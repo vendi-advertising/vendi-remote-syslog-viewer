@@ -45,10 +45,29 @@ class SyslogEventRepository extends ServiceEntityRepository
         return $hosts;
     }
 
+    public function findMostRecentEventsByMaxPriority(int $priority, int $days = 4)
+    {
+        $now = new \DateTime();
+        $then = $now->sub(new \DateInterval("P${days}D"));
+        $qb = $this->createQueryBuilder('s');
+
+        $query = $qb
+                    ->andWhere('s.Priority <= :priority')
+                    ->andWhere($qb->expr()->gt('s.ReceivedAt', ':date'))
+                    ->setParameter('priority', $priority)
+                    ->setParameter('date', $then, \Doctrine\DBAL\Types\Type::DATETIME)
+                    ->orderBy('s.ReceivedAt', 'DESC')
+                    ->getQuery()
+            ;
+
+        return $query->getResult();
+    }
+
+
     public function findMostRecentEventsByHost(string $hostname, int $days = 7)
     {
-        $now = new DateTime();
-        $then = $now->sub(new DateInterval("P${days}D"));
+        $now = new \DateTime();
+        $then = $now->sub(new \DateInterval("P${days}D"));
         $qb = $this->createQueryBuilder('s');
 
         $qb

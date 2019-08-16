@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HostsController!{% endblock %}
+
+{% block body %}
+<style>
+
+.table {
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 5rem 20rem 20rem 10rem 10rem 20rem auto;
+    margin: 0;
+    padding: 0;
+}
+
+</style>
+
+<div class="table">
+    <span class="cell header">ID</span>
+    <span class="cell header">Host</span>
+    <span class="cell header">Received At</span>
+    <span class="cell header">Facility</span>
+    <span class="cell header">Priority</span>
+    <span class="cell header">SysLogTag</span>
+    <span class="cell header">Message</span>
+
+    {% for event in events %}
+
+            <span class="row-facility-{{event.facility}} row-priority-{{event.priority}}">{{event.id}}</span>
+            <span class="row-facility-{{event.facility}} row-priority-{{event.priority}}">{{event.FromHost}}</span>
+            <span class="row-facility-{{event.facility}} row-priority-{{event.priority}}">{{event.receivedat|date('Y-m-d\\TH:i:sP')}}</span>
+            <span class="row-facility-{{event.facility}} row-priority-{{event.priority}}">{{event.facility}}</span>
+            <span class="row-facility-{{event.facility}} row-priority-{{event.priority}}">{{event.priority}}</span>
+            <span class="row-facility-{{event.facility}} row-priority-{{event.priority}}">{{event.syslogtag}}</span>
+            <code>{{event.get_best_message}}</code>
+    {% endfor %}
+</div>
+
+{% endblock %}

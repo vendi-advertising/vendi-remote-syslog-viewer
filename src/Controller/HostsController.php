@@ -26,6 +26,26 @@ class HostsController extends AbstractController
     }
 
     /**
+     * @Route("/p/{max_type}", name="graduated_priorities", requirements={"max_type"="\d+"})
+     */
+    public function graduated_priorities(int $max_type)
+    {
+        return $this->render('priorities/graduated_priorities.html.twig', [
+            'events' => $this->syslogEventRepository->findMostRecentEventsByMaxPriority($max_type),
+        ]);
+    }
+
+    /**
+     * @Route("/p", name="all_priorities")
+     */
+    public function priorities()
+    {
+        return $this->render('priorities/index.html.twig', [
+            'all_priorities' => SyslogPriorities::get_all(),
+        ]);
+    }
+
+    /**
      * @Route("/hosts", name="hosts")
      */
     public function index()
