@@ -47,11 +47,23 @@ class SyslogEventRepository extends ServiceEntityRepository
 
     public function findMostRecentEventsByHost(string $hostname, int $days = 7)
     {
-        return $this->findBy(
-            [
-                'FromHost' => $hostname,
-            ]
-        );
+        $now = new DateTime();
+        $then = $now->sub(new DateInterval("P${days}D"));
+        $qb = $this->createQueryBuilder('s');
+
+        $qb
+            ->andWhere('s.FromHost = :hostname')
+            ->andWhere('s.ReceivedAt >= :hostname')
+            ->andWhere($qb->expr()->gt('s.ReceivedAt', ':date'))
+            ->setParameter('hostname', $hostname)
+            ->setParameter('date', $then, \Doctrine\DBAL\Types\Type::DATETIME)
+            ->getQuery();
+
+            dump($qb);
+            die;
+
+        return $qb->execute();
+
     }
 
     // /**
