@@ -1,0 +1,8 @@
+filters:
+    fstab-exit:
+        message:
+            filter: exact
+            patern: "/lib/systemd/system-generators/systemd-fstab-generator failed with exit status 1."
+        tag:
+            filter: regex
+            pattern: ^systemd\[\d+\].*?$
