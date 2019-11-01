@@ -32,6 +32,11 @@ class StaticStringReducer implements MessageReducerInterface
                     'tag' => 'kernel:',
                     'message' => 'General boot message',
                 ],
+                [
+                    'facility' => 0,
+                    'tag' => '/opt/digitalocean/bin/do-agent[1',
+                    'message' => 'DigitalOcean Agent Noise',
+                ],
             ];
         }
 

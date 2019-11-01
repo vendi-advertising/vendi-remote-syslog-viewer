@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\MessageFilters\DigitalOceanAgentNoiseFilter;
 use App\MessageFilters\FirewallBlockFilter;
 use App\MessageFilters\GeneralBootMessages;
 use App\MessageFilters\MySqlNote;
@@ -16,6 +17,7 @@ class MessageFilterService
                 new FirewallBlockFilter(),
                 new MySqlNote(),
                 new GeneralBootMessages(),
+                new DigitalOceanAgentNoiseFilter(),
             ];
         }
 
