@@ -6,6 +6,7 @@ use App\MessageFilters\DigitalOceanAgentNoiseFilter;
 use App\MessageFilters\FirewallBlockFilter;
 use App\MessageFilters\GeneralBootMessages;
 use App\MessageFilters\MySqlNote;
+use App\MessageFilters\NXDomainFilter;
 
 class MessageFilterService
 {
@@ -18,6 +19,7 @@ class MessageFilterService
                 new MySqlNote(),
                 new GeneralBootMessages(),
                 new DigitalOceanAgentNoiseFilter(),
+                new NXDomainFilter(),
             ];
         }
 
