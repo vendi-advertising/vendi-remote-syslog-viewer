@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\MessageFilters\DigitalOceanAgentNoiseFilter;
 use App\MessageFilters\FirewallBlockFilter;
+use App\MessageFilters\FsTabSwapWarningFilter;
 use App\MessageFilters\GeneralBootMessages;
 use App\MessageFilters\MySqlNote;
 use App\MessageFilters\NXDomainFilter;
@@ -20,6 +21,7 @@ class MessageFilterService
                 new GeneralBootMessages(),
                 new DigitalOceanAgentNoiseFilter(),
                 new NXDomainFilter(),
+                new FsTabSwapWarningFilter(),
             ];
         }
 

@@ -3,6 +3,7 @@
 namespace App\MessageReducers;
 
 use App\Entity\SyslogEvent;
+use App\MessageFilters\FsTabSwapWarningFilter;
 
 class StaticStringReducer implements MessageReducerInterface
 {
@@ -41,6 +42,11 @@ class StaticStringReducer implements MessageReducerInterface
                     'facility' => 3,
                     'tag' => 'systemd-resolved[8820]:',
                     'message' => 'NXDOMAIN Warning',
+                ],
+                [
+                    'facility' => 3,
+                    'tag' => 'kernel:',
+                    'message' => FsTabSwapWarningFilter::MESSAGE ,
                 ],
             ];
         }
