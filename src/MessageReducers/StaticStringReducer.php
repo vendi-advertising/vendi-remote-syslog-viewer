@@ -37,6 +37,11 @@ class StaticStringReducer implements MessageReducerInterface
                     'tag' => '/opt/digitalocean/bin/do-agent[1',
                     'message' => 'DigitalOcean Agent Noise',
                 ],
+                [
+                    'facility' => 3,
+                    'tag' => 'systemd-resolved[8820]:',
+                    'message' => 'NXDOMAIN Warning',
+                ],
             ];
         }
 
